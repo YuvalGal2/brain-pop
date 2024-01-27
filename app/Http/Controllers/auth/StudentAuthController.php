@@ -13,13 +13,15 @@ class StudentAuthController extends AuthController
         $this->middleware('auth:student_api', ['except' => ['login', 'register']]);
             $this->guard = 'student_api';
     }
-    public function register(Request $request){
-        $request->validate([
+    public static function getValidation(): array {
+        return [
             'username' => 'required|string|max:255|unique:students',
             'full_name' => 'required|string|max:255',
             'password' => 'required|string|min:6',
-        ]);
-
+        ];
+    }
+    public function register(Request $request){
+        $request->validate(self::getValidation());
         $student = Student::create([
             'username' => $request->username,
             'password' => Hash::make($request->password),

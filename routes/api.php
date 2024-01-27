@@ -3,6 +3,8 @@
 
 use App\Http\Controllers\auth\StudentAuthController;
 use App\Http\Controllers\auth\TeacherAuthController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +18,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
+// Auth routes for students
 Route::group([
     'prefix' => 'student'
 ], function ($router) {
@@ -25,6 +30,8 @@ Route::group([
     Route::post('/refresh', [StudentAuthController::class, 'refresh']);
     Route::get('/user-profile', [StudentAuthController::class, 'userProfile']);
 });
+
+// Auth routes for teachers.
 Route::group([
     'prefix' => 'teacher'
 ], function ($router) {
@@ -33,4 +40,26 @@ Route::group([
     Route::post('/logout', [TeacherAuthController::class, 'logout']);
     Route::post('/refresh', [TeacherAuthController::class, 'refresh']);
     Route::get('/user-profile', [TeacherAuthController::class, 'userProfile']);
+});
+
+
+// CRUD for students
+Route::middleware('auth:student_api')->group(function () {
+   Route::resource('students', StudentController::class);
+});
+
+
+// CRUD for teachers
+Route::middleware('auth:teacher_api')->group(function () {
+    Route::resource('teachers', TeacherController::class);
+});
+
+// CRUD for periods - teacher permissions
+Route::middleware('auth:teacher_api')->group(function () {
+    Route::resource('periods', 'PeriodController');
+});
+// CRUD for periods - student permissions
+Route::middleware('auth:student_api')->group(function () {
+    Route::resource('periods', 'PeriodController')->only(['show', 'delete', 'create']);
+    // ... other routes accessible to students
 });

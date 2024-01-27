@@ -14,14 +14,16 @@ class TeacherAuthController extends AuthController
         $this->middleware('auth:teacher_api', ['except' => ['login', 'register']]);
         $this->guard = 'teacher_api';
     }
-    public function register(Request $request){
-        $request->validate([
+    public static function getValidation() {
+        return [
             'username' => 'required|string|max:255|unique:teachers',
             'email' => 'required|string|email|unique:teachers',
             'full_name' => 'required|string|max:255',
             'password' => 'required|string|min:6',
-        ]);
-
+        ];
+    }
+    public function register(Request $request){
+        $request->validate(self::getValidation());
         $teacher = Teacher::create([
             'username' => $request->username,
             'password' => Hash::make($request->password),
