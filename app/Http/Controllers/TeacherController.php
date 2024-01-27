@@ -18,7 +18,7 @@ class TeacherController extends Controller
     {
         // Display a listing of teachers
         $teachers = Teacher::all();
-        return response()->json($teachers);
+        return response()->json((['data' => $teachers]));
     }
 
     /**

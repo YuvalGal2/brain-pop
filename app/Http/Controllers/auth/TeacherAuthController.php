@@ -41,6 +41,6 @@ class TeacherAuthController extends AuthController
                 'token' => $token,
                 'type' => 'bearer',
             ]
-        ]);
+        ],201);
     }
 }
