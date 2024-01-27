@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\auth\StudentAuthController;
 use App\Http\Controllers\auth\TeacherAuthController;
+use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +49,7 @@ Route::middleware('auth:student_api')->group(function () {
    Route::resource('students', StudentController::class);
 });
 
+// TODO: add route for adding students from the students model
 
 // CRUD for teachers
 Route::middleware('auth:teacher_api')->group(function () {
@@ -56,10 +58,5 @@ Route::middleware('auth:teacher_api')->group(function () {
 
 // CRUD for periods - teacher permissions
 Route::middleware('auth:teacher_api')->group(function () {
-    Route::resource('periods', 'PeriodController');
-});
-// CRUD for periods - student permissions
-Route::middleware('auth:student_api')->group(function () {
-    Route::resource('periods', 'PeriodController')->only(['show', 'delete', 'create']);
-    // ... other routes accessible to students
+    Route::resource('periods', PeriodController::class);
 });

@@ -50,9 +50,11 @@ class StudentController extends Controller
      */
     public function show(int $id)
     {
-        //
-        $student = Student::findOrFail($id);
-        return response()->json($student);
+        $student = Student::find($id);
+        if ($student) {
+            return response()->json($student);
+        }
+        return response()->json(['error' => 'Resource not found'], 404);
     }
 
     /**
@@ -75,6 +77,10 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $user = $request->user();
+        if (strval($user->id) !== $id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
         $rules = StudentAuthController::getValidation();
         // same rules for reg / login but only refer to full_name
         $rules = array_filter($rules, fn ($key) => in_array($key, ['full_name']), ARRAY_FILTER_USE_KEY);
@@ -93,8 +99,9 @@ class StudentController extends Controller
      * @param  int  $id
      * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
+        // TODO: also need to think about who can delete users .. maybe teachers as well ?
         $student = Student::find($id);
         if ($student) {
             $student->delete();

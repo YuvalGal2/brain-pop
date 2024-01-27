@@ -4,6 +4,7 @@ namespace App\Http\Controllers\auth;
 
 use App\Models\Student;
 use App\Models\Teacher;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -14,7 +15,7 @@ class TeacherAuthController extends AuthController
         $this->middleware('auth:teacher_api', ['except' => ['login', 'register']]);
         $this->guard = 'teacher_api';
     }
-    public static function getValidation() {
+    public static function getValidation(): array {
         return [
             'username' => 'required|string|max:255|unique:teachers',
             'email' => 'required|string|email|unique:teachers',
@@ -22,7 +23,7 @@ class TeacherAuthController extends AuthController
             'password' => 'required|string|min:6',
         ];
     }
-    public function register(Request $request){
+    public function register(Request $request): JsonResponse{
         $request->validate(self::getValidation());
         $teacher = Teacher::create([
             'username' => $request->username,
