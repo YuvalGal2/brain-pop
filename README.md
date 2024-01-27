@@ -1,69 +1,161 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Project API Documentation
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Welcome to the documentation 
+brain pop api project.
+This API provides endpoints for managing students, teachers, periods, grades, and their relationships. Below is a comprehensive guide on how to interact with various components of our API.
 
-## About Laravel
+## Authentication
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Student Authentication
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+#### Login
+- **Endpoint:** `POST /api/student/login`
+- **Description:** Authenticate a student and obtain an access token. (jwt)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+...
 
-## Learning Laravel
+### Teacher Authentication
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+#### Login
+- **Endpoint:** `POST /api/teacher/login`
+- **Description:** Authenticate a teacher and obtain an access token. (jwt)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+...
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## CRUD Operations
 
-## Laravel Sponsors
+### Students
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+#### Retrieve All Students
+- **Endpoint:** `GET /api/students`
+- **Description:** Get a list of all students.
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+- **Endpoint:** `GET /api/students/id`
+- **Description:** Get a response with the student of which you requested
+- 
+- **Endpoint:** `post /api/students`
+- **Description:** Creates a student 
+- **Required params:** 
+- {
+- **username**:**unique**,string,max-length:255,
+- **full_name**:string,max-length:255
+- **password**:string,min-length:6
+-  }
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Endpoint:** `put /api/students/id`
+- **Description:** Updates a student - allowed only to update full name.
+- **Required params:**
+- {
+- **full_name**:string,max-length:255
+-  }
 
-## Code of Conduct
+- **Endpoint:** `delete /api/students/id`
+- **Description:** Delete a student
+- **Required params:**
+- {
+- **id**:id
+-  }
+- 
+..........
+- 
+### Teachers
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### Retrieve All Teachers
+- **Endpoint:** `GET /api/teachers`
+- **Description:** Get a list of all teachers.
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Endpoint:** `GET /api/teachers/id`
+- **Description:** Get a response with the teacher of which you requested
+-
+- **Endpoint:** `post /api/teachers`
+- **Description:** Creates a teacher
+- **Required params:**
+- {
+- **username**:**unique**,string,max-length:255,
+- **email**:**unique**,email
+- **full_name**:string,max-length:255
+- **password**:string,min-length:6
+-  }
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# brain-pop
-# brain-pop
-# brain-pop
+- **Endpoint:** `put /api/teachers/id`
+- **Description:** Updates a teacher - allowed only to update full name or email.
+- **Required params:**
+- {
+- **full_name**:string,max-length:255 **and or** email
+-  }
+
+- **Endpoint:** `delete /api/teachers/id`
+- **Description:** Delete a teacher
+- **Required params:**
+- {
+- **id**:id
+-  }
+
+
+- **Endpoint:** `get teachers/{teacherId}/periods`
+- **Description:** Gets all periods of given teacher
+- **Required params:**
+- {
+- **teacherId**:id
+-  }
+
+
+- **Endpoint:** `get teachers/{teacherId}/students`
+- **Description:** Gets all students of given teacher via periods
+- **Required params:**
+- {
+- **teacherId**:id
+-  }
+
+
+
+#### Retrieve All Periods by Teacher
+- **Endpoint:** `GET /api/teachers/{teacherId}/periods`
+- **Description:** Get all periods associated with a specific teacher.
+
+...........
+
+### Grades
+
+#### CRUD Operations for Grades
+- **Endpoints:**
+    - `PUT /api/grades/{id}`
+- **Description:** Updates the grade of a give student id
+- **Required body params:** {grade:int,period_id:int}
+
+...
+
+### Periods
+
+#### CRUD Operations for Periods
+- **Endpoints:**
+    - `GET /api/periods`
+    - `GET /api/periods/{id}`
+    - `POST /api/periods`
+    - `PUT /api/periods/{id}`
+    - `DELETE /api/periods/{id}`
+
+...
+
+#### Assign Student to Period
+- **Endpoint:** `POST /api/periods/assign-student`
+- **Description:** Assign a student to a period.
+
+...
+
+#### Remove Student from Period
+- **Endpoint:** `DELETE /api/remove-student/{periodId}/{studentId}`
+- **Description:** Remove a student from a period.
+
+...
+
+#### Retrieve All Students by Period
+- **Endpoint:** `GET /api/periods/{periodId}/students`
+- **Description:** Get all students associated with a specific period.
+
+...
+
