@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\auth\StudentAuthController;
 use App\Http\Controllers\auth\TeacherAuthController;
+use App\Http\Controllers\GradeController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
@@ -54,9 +55,24 @@ Route::middleware('auth:student_api')->group(function () {
 // CRUD for teachers
 Route::middleware('auth:teacher_api')->group(function () {
     Route::resource('teachers', TeacherController::class);
+    Route::get('teachers/{teacherId}/periods', [TeacherController::class, 'getAllPeriodsByTeacher']);
+    Route::get('teachers/{teacherId}/students', [TeacherController::class, 'getAllStudentsByTeacher']);
+
+});
+// CRUD for grades
+Route::middleware('auth:teacher_api')->group(function () {
+    Route::resource('grades', GradeController::class);
 });
 
 // CRUD for periods - teacher permissions
 Route::middleware('auth:teacher_api')->group(function () {
     Route::resource('periods', PeriodController::class);
+
+    /*
+    it makes more sense to put it here not in the student
+    itself as the teacher might be able to assign/remove a student
+    */
+    Route::post('periods/assign-student',  [PeriodController::class, 'addStudent'] );
+    Route::delete('remove-student/{periodId}/{studentId}',  [PeriodController::class, 'removeStudent'] );
+    Route::get('periods/{periodId}/students',  [PeriodController::class, 'getAllStudentsByPeriod'] );
 });

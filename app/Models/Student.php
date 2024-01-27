@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
@@ -34,6 +35,18 @@ class Student extends Authenticatable implements JWTSubject
     ];
 
     //put these methods at the bottom of your class body
+
+    public function updateGrade($newGrade,$periodId): JsonResponse {
+        $period = Period::with('students')->find($periodId);
+        if (!$period) {
+            return response()->json(['error' => 'Resource not found'], 404);
+        }
+        //$period->students->updateExistingPivot($this->id, ['grade' => $newGrade]);
+        $period->students()->updateExistingPivot($this->id, ['grade' => $newGrade]);
+        $this->grade = $newGrade;
+        $this->save();
+        return response()->json(['message' => 'Resource updated successfully', 'data' => $period]);
+    }
 
     public function getJWTIdentifier()
     {

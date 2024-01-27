@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Period;
+use App\Models\Student;
 use App\Models\Teacher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -112,11 +113,18 @@ class PeriodController extends Controller
      * @param string $studentId
      * @return JsonResponse
      */
-    public function addStudent(string $periodId, string $studentId): JsonResponse
+    public function addStudent(Request $request): JsonResponse
     {
-        $period = Period::find($periodId);
-        if ($period) {
-            $period->students()->attach($studentId);
+        $request->validate([
+            "periodId" => "int|required",
+            // this validation is to make sure there is no duplicates in the student to periods table.
+            // every student can get register to each period, BUT ONLY ONCE.
+            "studentId" => "int|required|unique:period_student,student_id,NULL,id,period_id,{$request->periodId}"
+        ]);
+        $period = Period::find($request->periodId);
+        $student = Student::find($request->studentId);
+        if ($period && $student) {
+            $period->students()->attach($request->studentId);
             return response()->json($period, 200);
         }
         return response()->json(['error' => 'Resource not found'], 404);
@@ -133,9 +141,18 @@ class PeriodController extends Controller
     {
         $period = Period::find($periodId);
         if ($period) {
-            $period->students()->detach($studentId);
-            return response()->json($period, 200);
+            $detachedCount = $period->students()->detach($studentId);
+            if ($detachedCount === 0) {
+                return response()->json(['error' => 'Resource not found'], 404);
+            }
+            return response()->json(['message' => "{$detachedCount} student(s) removed successfully"], 200);
         }
         return response()->json(['error' => 'Resource not found'], 404);
+    }
+
+
+    public function getAllStudentsByPeriod(int $periodId): JsonResponse
+    {
+        return Period::getAllStudents($periodId);
     }
 }

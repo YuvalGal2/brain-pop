@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\auth\TeacherAuthController;
+use App\Models\Period;
 use App\Models\Teacher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -101,5 +102,25 @@ class TeacherController extends Controller
             return response()->json(null, 204);
         }
         return response()->json(['error' => 'Resource not found'], 404);
+    }
+
+    public function getAllPeriodsByTeacher(int $teacherId): JsonResponse
+    {
+        return Period::getAllByTeacher($teacherId);
+    }
+
+    public function getAllStudentsByTeacher(int $teacherId): JsonResponse {
+        $teacher = Teacher::with(['periods.students'])->find($teacherId);
+        if ($teacher) {
+            $uniqueStudents = collect();
+            foreach ($teacher->periods as $period) {
+                $students = $period->students->toArray();
+                $uniqueStudents = $uniqueStudents->merge($students);
+            }
+            // Ensure uniqueness based on student ID
+            $uniqueStudents = $uniqueStudents->unique('id')->values();
+            return response()->json(['students' => $uniqueStudents], 200);
+        }
+        return response()->json(['error' => 'Teacher not found'], 404);
     }
 }

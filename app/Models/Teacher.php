@@ -12,7 +12,11 @@ class Teacher extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
+    // define relation to periods - each teacher has many periods.
+    public function periods()
+    {
+        return $this->hasMany(Period::class);
+    }    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
